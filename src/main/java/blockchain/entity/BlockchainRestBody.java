@@ -12,7 +12,7 @@ public class BlockchainRestBody {
 
 	@Data
 	public class Params {
-		private String type;
+		private int type;
 		private ChaincodeID chaincodeID;
 		private CtorMsg ctorMsg;
 		private String secureContext;
@@ -22,10 +22,10 @@ public class BlockchainRestBody {
 		Params params = new Params();
 		ChaincodeID chaincodeID = new ChaincodeID(path, name);
 		CtorMsg ctorMsg = new CtorMsg(args);
-		params.setType(type);
+		params.setType(Integer.valueOf(type));
 		params.setChaincodeID(chaincodeID);
 		params.setCtorMsg(ctorMsg);
-		this.params=params;
+		this.params = params;
 	}
 
 	@Data
