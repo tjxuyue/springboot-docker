@@ -55,7 +55,7 @@ public class BlockchainController {
 		Body body = new Body();
 		body.setId(1);
 		body.setIp("127.0.0.1");
-		body.setPort("7051");
+		body.setPort("7050");
 		body.setChaincode(chaincode);
 		body.setFunction(function);
 		body.setArgs(new String[] { "a", "b", "10" });
