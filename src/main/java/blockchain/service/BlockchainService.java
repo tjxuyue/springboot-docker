@@ -20,13 +20,17 @@ public class BlockchainService {
 	PropertiesBlockchainRestConfig propertiesBlockchainRestConfig;
 
 	public BlockchainRestBody getBlockchainRestBody(Body body) {
-		BlockchainRestBody blockchainRestBody = new BlockchainRestBody();
-		blockchainRestBody.setId(body.getId());
-		blockchainRestBody.setMethod(Constant.METHOD_INVOKE);
-		blockchainRestBody.setJsonrpc(propertiesBlockchainRestConfig.getJsonrpc());
-		blockchainRestBody.setParams(propertiesBlockchainRestConfig.getType(), body.getChaincode(), null,
-				body.getArgs());
-		return blockchainRestBody;
+		try {
+			BlockchainRestBody blockchainRestBody = new BlockchainRestBody();
+			blockchainRestBody.setId(body.getId());
+			blockchainRestBody.setMethod(Constant.METHOD_INVOKE);
+			blockchainRestBody.setJsonrpc(propertiesBlockchainRestConfig.getJsonrpc());
+			blockchainRestBody.setParams(propertiesBlockchainRestConfig.getType(), body.getChaincode(), null,
+					body.getArgs());
+			return blockchainRestBody;
+		} catch (Exception e) {
+			return null;
+		}
 	}
 
 	public String PostRest(String url, String bodyJson) {

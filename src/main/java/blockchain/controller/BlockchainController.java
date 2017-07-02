@@ -9,9 +9,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSON;
 
-import blockchain.config.ErrorCode;
+import blockchain.config.Constant;
 import blockchain.entity.BlockchainRestBody;
 import blockchain.entity.Body;
+import blockchain.entity.Response;
 import blockchain.service.BlockchainService;
 import blockchain.utils.CheckUtils;
 
@@ -23,12 +24,21 @@ public class BlockchainController {
 
 	@RequestMapping("/chaincode/invoke")
 	public String chaincode(@RequestBody Body body, HttpServletRequest request) {
+		Response response = new Response();
 		if (CheckUtils.isEmpty(body.getIp(), body.getPort(), body.getFunction()) || CheckUtils.isEmpty(body.getId())) {
-			return ErrorCode.MISSING_BASIC_PARAMETER;
+			return response.responseToString(Constant.STATUS_ERROR_MISSING_BASIC_PARAMETER, Constant.MESSAGE_ERROR);
 		}
+
 		BlockchainRestBody blockchainRestBody = blockchainService.getBlockchainRestBody(body);
+		if (null == blockchainRestBody) {
+			return response.responseToString(Constant.STATUS_ERROR_BODY_ERROR, Constant.MESSAGE_ERROR);
+		}
 		String url = blockchainService.chaincodeRestUrlFormat(body.getIp(), body.getPort());
-		return blockchainService.PostRest(url, JSON.toJSONString(blockchainRestBody));
+		if (null == url) {
+			return response.responseToString(Constant.STATUS_ERROR_URL, Constant.MESSAGE_ERROR);
+		}
+		String message = blockchainService.PostRest(url, JSON.toJSONString(blockchainRestBody));
+		return response.responseToString(message, Constant.STATUS_SUCCESS);
 
 	}
 
