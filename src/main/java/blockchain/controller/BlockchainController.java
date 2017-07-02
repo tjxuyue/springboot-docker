@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.websocket.server.PathParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -49,8 +50,8 @@ public class BlockchainController {
 	}
 
 	@RequestMapping(value = "/test/{chaincode}/{function}", method = RequestMethod.GET)
-	public String test(@PathParam(value = "chaincode") String chaincode,
-			@PathParam(value = "function") String function) {
+	public String test(@PathVariable(value = "chaincode") String chaincode,
+			@PathVariable(value = "function") String function) {
 		Body body = new Body();
 		body.setId(1);
 		body.setIp("127.0.0.1");
