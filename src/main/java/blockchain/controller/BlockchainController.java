@@ -1,6 +1,7 @@
 package blockchain.controller;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.websocket.server.PathParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -10,6 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.alibaba.fastjson.JSON;
 
 import blockchain.config.Constant;
+import blockchain.config.PropertiesBlockchainRestConfig;
+import blockchain.config.PropertiesServerConfig;
 import blockchain.entity.BlockchainRestBody;
 import blockchain.entity.Body;
 import blockchain.entity.Response;
@@ -21,6 +24,8 @@ public class BlockchainController {
 
 	@Autowired
 	BlockchainService blockchainService;
+	@Autowired
+	PropertiesServerConfig propertiesServerConfig;
 
 	@RequestMapping("/chaincode/invoke")
 	public String chaincode(@RequestBody Body body, HttpServletRequest request) {
@@ -42,8 +47,32 @@ public class BlockchainController {
 
 	}
 
-	@RequestMapping("/chaincode")
-	public String test(@RequestBody String blockchainRestBody) {
-		return blockchainRestBody;
+	@RequestMapping("/test/{chaincode}/{function}")
+	public String test(@PathParam(value = "chaincode") String chaincode,
+			@PathParam(value = "function") String function) {
+		Body body = new Body();
+		body.setId(1);
+		body.setIp("127.0.0.1");
+		body.setPort(propertiesServerConfig.getPort());
+		body.setChaincode(chaincode);
+		body.setFunction(function);
+		body.setArgs(new String[] { "a", "b", "10" });
+
+		Response response = new Response();
+		if (CheckUtils.isEmpty(body.getIp(), body.getPort(), body.getFunction()) || CheckUtils.isEmpty(body.getId())) {
+			return response.responseToString(Constant.STATUS_ERROR_MISSING_BASIC_PARAMETER, Constant.MESSAGE_ERROR);
+		}
+
+		BlockchainRestBody blockchainRestBody = blockchainService.getBlockchainRestBody(body);
+		if (null == blockchainRestBody) {
+			return response.responseToString(Constant.STATUS_ERROR_BODY_ERROR, Constant.MESSAGE_ERROR);
+		}
+		String url = blockchainService.chaincodeRestUrlFormat(body.getIp(), body.getPort());
+		if (null == url) {
+			return response.responseToString(Constant.STATUS_ERROR_URL, Constant.MESSAGE_ERROR);
+		}
+		String message = blockchainService.PostRest(url, JSON.toJSONString(blockchainRestBody));
+		return response.responseToString(message, Constant.STATUS_SUCCESS);
+
 	}
 }
