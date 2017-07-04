@@ -52,9 +52,10 @@ public class BlockchainController {
 	@RequestMapping(value = "/test/{chaincode}/{function}", method = RequestMethod.GET)
 	public String test(@PathVariable(value = "chaincode") String chaincode,
 			@PathVariable(value = "function") String function) {
+		propertiesServerConfig.getHost_ip();
 		Body body = new Body();
 		body.setId(1);
-		body.setIp("127.0.0.1");
+		body.setIp(propertiesServerConfig.getHost_ip());
 		body.setPort("7050");
 		body.setChaincode(chaincode);
 		body.setFunction(function);
