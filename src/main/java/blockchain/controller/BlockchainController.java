@@ -1,7 +1,6 @@
 package blockchain.controller;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.websocket.server.PathParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.alibaba.fastjson.JSON;
 
 import blockchain.config.Constant;
-import blockchain.config.PropertiesBlockchainRestConfig;
 import blockchain.config.PropertiesServerConfig;
 import blockchain.entity.BlockchainRestBody;
 import blockchain.entity.Body;
